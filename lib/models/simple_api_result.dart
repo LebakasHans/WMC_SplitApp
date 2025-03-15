@@ -32,3 +32,4 @@ class SimpleApiResult<T> {
     );
   }
 }
+

@@ -4,7 +4,10 @@ class User {
 
   User({required this.id, required this.username});
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(id: map['id'] as int, username: map['username'] as String);
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] as int,
+      username: json['username'] as String,
+    );
   }
 }

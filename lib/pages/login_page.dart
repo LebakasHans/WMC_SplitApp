@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:split_app/resources/auth_repository.dart';
+import 'package:split_app/widgets/input_field_widget.dart';
+import 'package:split_app/widgets/loading_button_widget.dart';
 import 'home_page.dart';
 import 'register_page.dart';
 
@@ -99,47 +101,21 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                InputField(
                   controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  labelText: 'Username',
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                InputField(
                   controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  labelText: 'Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  icon:
-                      _isLoading
-                          ? Container(
-                            width: 24,
-                            height: 24,
-                            padding: const EdgeInsets.all(2.0),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                            ),
-                          )
-                          : const SizedBox.shrink(),
-                  label: const Text('Login'),
+                LoadingButton(
+                  label: 'Login',
+                  onPressed: _login,
+                  isLoading: _isLoading,
                 ),
                 const SizedBox(height: 20),
                 TextButton(

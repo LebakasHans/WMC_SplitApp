@@ -33,9 +33,29 @@ class ApiProvider {
   Future<Response> postRequest({
     required String endpoint,
     required Map<String, dynamic> data,
+    dynamic headers,
   }) async {
     try {
-      final response = await _dio.post(endpoint, data: data);
+      final response = await _dio.post(
+        endpoint,
+        data: data,
+        options: Options(headers: headers),
+      );
+      return response;
+    } on DioException {
+      throw Exception('An error occurred. Please try again later.');
+    }
+  }
+
+  Future<Response> deleteRequest({
+    required String endpoint,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      final response = await _dio.delete(
+        endpoint,
+        options: Options(headers: headers),
+      );
       return response;
     } on DioException {
       throw Exception('An error occurred. Please try again later.');

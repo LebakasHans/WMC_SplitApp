@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // Add this import
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:split_app/pages/home_page.dart';
-import 'package:split_app/resources/auth_repository.dart'; // Add this import
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add this import
+import 'package:split_app/resources/auth_repository.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:split_app/widgets/input_field_widget.dart';
+import 'package:split_app/widgets/loading_button_widget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -94,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 50.0), // Add top padding
+            padding: const EdgeInsets.only(top: 50.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -103,58 +105,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                InputField(
                   controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  labelText: 'Username',
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                InputField(
                   controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  labelText: 'Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                InputField(
                   controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  labelText: 'Confirm Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: _isLoading ? null : _register,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  icon:
-                      _isLoading
-                          ? Container(
-                            width: 24,
-                            height: 24,
-                            padding: const EdgeInsets.all(2.0),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                            ),
-                          )
-                          : const SizedBox.shrink(),
-                  label: const Text('Register'),
+                LoadingButton(
+                  label: 'Register',
+                  onPressed: _register,
+                  isLoading: _isLoading,
                 ),
                 const SizedBox(height: 50),
               ],

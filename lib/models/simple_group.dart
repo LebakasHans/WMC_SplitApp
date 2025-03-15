@@ -7,7 +7,7 @@ class SimpleGroup {
   factory SimpleGroup.fromJson(Map<String, dynamic> json) {
     return SimpleGroup(
       id: json['id'] as int,
-      groupName: json['groupName'] as String,
+      groupName: json['groupname'] as String,
     );
   }
 }

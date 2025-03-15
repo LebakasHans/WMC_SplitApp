@@ -26,7 +26,7 @@ class AuthRepository {
 
       result = SimpleApiResult.fromJson<User>(
         Map<String, dynamic>.from(response.data),
-        (x) => User.fromMap(x),
+        (x) => User.fromJson(x),
       );
     } on Exception catch (e) {
       result = SimpleApiResult.error(e.toString().substring(11));
@@ -50,7 +50,7 @@ class AuthRepository {
 
       result = SimpleApiResult.fromJson<User>(
         Map<String, dynamic>.from(response.data),
-        (x) => User.fromMap(x),
+        (x) => User.fromJson(x),
       );
     } on Exception catch (e) {
       result = SimpleApiResult.error(e.toString().substring(11));
