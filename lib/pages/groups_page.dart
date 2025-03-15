@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:split_app/models/simple_group.dart';
-import 'package:split_app/resources/user_repository.dart';
-import 'package:split_app/widgets/empty_state_widget.dart';
-import 'package:split_app/widgets/group_list_item_widget.dart';
+import 'package:split_app/models/user.dart';
+import 'package:split_app/resources/friends_repository.dart';
+import 'package:split_app/resources/groups_repository.dart';
+import 'package:split_app/widgets/groups/create_group_dialog.dart';
+import 'package:split_app/widgets/shared/empty_state_widget.dart';
+import 'package:split_app/widgets/groups/group_list_item_widget.dart';
+import 'package:split_app/pages/group_detail_page.dart';
 
 class GroupsPage extends StatefulWidget {
   const GroupsPage({super.key});
@@ -13,7 +18,8 @@ class GroupsPage extends StatefulWidget {
 
 class _GroupsPageState extends State<GroupsPage> {
   late Future<List<SimpleGroup>> _groupsFuture;
-  final _repository = UserRepository();
+  final _groupsRepository = GroupsRepository();
+  final _friendsRepository = FriendsRepository();
 
   @override
   void initState() {
@@ -23,24 +29,71 @@ class _GroupsPageState extends State<GroupsPage> {
 
   void _refreshGroups() {
     setState(() {
-      _groupsFuture = UserRepository().getGroups();
+      _groupsFuture = _groupsRepository.getGroups();
     });
   }
 
-  void _createNewGroup() {
-    // TODO: Implement group creation logic
+  void _createNewGroup() async {
+    List<User> friends = [];
+    try {
+      friends = await _friendsRepository.getFriends();
+    } catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'Error loading friends: ${e.toString()}',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+
     showDialog(
       context: context,
       builder:
-          (context) => AlertDialog(
-            title: const Text('Coming Soon'),
-            content: const Text('Group creation will be implemented soon!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
+          (context) => CreateGroupDialog(
+            friends: friends,
+            onSubmit: (groupName, selectedFriendIds) async {
+              Navigator.pop(context);
+
+              try {
+                final result = await _groupsRepository.createGroup(
+                  groupName,
+                  selectedFriendIds,
+                );
+
+                if (result.isSuccess) {
+                  Fluttertoast.showToast(
+                    msg: 'Group created successfully!',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                  );
+                  _refreshGroups();
+                } else {
+                  Fluttertoast.showToast(
+                    msg: 'Error: ${result.errorMessage ?? "Unknown error"}',
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                }
+              } catch (e) {
+                Fluttertoast.showToast(
+                  msg: 'Error creating group: ${e.toString()}',
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                );
+              }
+            },
           ),
     );
   }
@@ -89,7 +142,12 @@ class _GroupsPageState extends State<GroupsPage> {
                   return GroupListItem(
                     group: group,
                     onTap: () {
-                      // TODO: Navigate to group details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GroupDetailPage(group: group),
+                        ),
+                      );
                     },
                   );
                 },

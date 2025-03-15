@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:split_app/models/user.dart';
-import 'package:split_app/resources/user_repository.dart';
-import 'package:split_app/widgets/empty_state_widget.dart';
-import 'package:split_app/widgets/friend_list_item_widget.dart';
+import 'package:split_app/resources/friends_repository.dart';
+import 'package:split_app/widgets/shared/empty_state_widget.dart';
+import 'package:split_app/widgets/friends/friend_list_item_widget.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -16,6 +16,7 @@ class _FriendsPageState extends State<FriendsPage> {
   late Future<List<User>> _friendsFuture;
   final TextEditingController _friendUsernameController =
       TextEditingController();
+  final _friendsRepository = FriendsRepository();
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _FriendsPageState extends State<FriendsPage> {
 
   void _refreshFriends() {
     setState(() {
-      _friendsFuture = UserRepository().getFriends();
+      _friendsFuture = _friendsRepository.getFriends();
     });
   }
 
@@ -50,7 +51,7 @@ class _FriendsPageState extends State<FriendsPage> {
       Navigator.pop(context);
     }
 
-    final result = await UserRepository().addFriend(friendUsername);
+    final result = await _friendsRepository.addFriend(friendUsername);
 
     Fluttertoast.showToast(
       msg:
@@ -97,7 +98,7 @@ class _FriendsPageState extends State<FriendsPage> {
 
     if (confirmed != true) return;
 
-    final result = await UserRepository().removeFriend(friend.id);
+    final result = await _friendsRepository.removeFriend(friend.id);
 
     Fluttertoast.showToast(
       msg:

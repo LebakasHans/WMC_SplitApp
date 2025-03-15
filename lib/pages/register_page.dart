@@ -6,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:split_app/pages/home_page.dart';
 import 'package:split_app/resources/auth_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:split_app/widgets/input_field_widget.dart';
-import 'package:split_app/widgets/loading_button_widget.dart';
+import 'package:split_app/widgets/shared/input_field_widget.dart';
+import 'package:split_app/widgets/shared/loading_button_widget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

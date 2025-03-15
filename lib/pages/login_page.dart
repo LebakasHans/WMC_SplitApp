@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:split_app/resources/auth_repository.dart';
-import 'package:split_app/widgets/input_field_widget.dart';
-import 'package:split_app/widgets/loading_button_widget.dart';
+import 'package:split_app/widgets/shared/input_field_widget.dart';
+import 'package:split_app/widgets/shared/loading_button_widget.dart';
 import 'home_page.dart';
 import 'register_page.dart';
 
