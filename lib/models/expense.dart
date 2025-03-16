@@ -3,6 +3,7 @@ class Expense {
   final String description;
   final double amount;
   final int paidById;
+  final String paidByName;
   final DateTime date;
   final List<ParticipantShare> participantShares;
 
@@ -11,6 +12,7 @@ class Expense {
     required this.description,
     required this.amount,
     required this.paidById,
+    required this.paidByName,
     required this.date,
     required this.participantShares,
   });
@@ -21,6 +23,7 @@ class Expense {
       description: json['description'] ?? '',
       amount: (json['amount'] ?? 0).toDouble(),
       paidById: json['paidById'] ?? 0,
+      paidByName: json['paidByName'] ?? '',
       date:
           json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       participantShares:

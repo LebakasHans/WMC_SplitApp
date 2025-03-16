@@ -91,4 +91,16 @@ class GroupsRepository {
       return [];
     }
   }
+
+  Future<SimpleGroup> getGroup(int groupId) async {
+    final username = await _secureStorage.read(key: 'username');
+    final password = await _secureStorage.read(key: 'password');
+
+    var response = await _provider.getRequest(
+      endpoint: '/groups/$groupId',
+      headers: {'username': username ?? '', 'password': password ?? ''},
+    );
+
+    return SimpleGroup.fromJson(response.data);
+  }
 }
