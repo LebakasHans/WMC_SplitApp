@@ -53,7 +53,7 @@ class ExpenseItemWidget extends StatelessWidget {
     return Container(
       width: 45,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
@@ -83,6 +83,7 @@ class ExpenseItemWidget extends StatelessWidget {
 
   String _formatShare(Expense expense, int? currentUserId) {
     if (currentUserId == null) return '';
+
     final userShareOpt = expense.participantShares.where(
       (share) => share.participantId == currentUserId,
     );
@@ -90,17 +91,17 @@ class ExpenseItemWidget extends StatelessWidget {
     if (userShareOpt.isEmpty) return '';
 
     final userShare = userShareOpt.first;
-    final amount = userShare.share;
+    final shareAmount = userShare.share;
 
-    if (amount == 0.0) return '';
-
-    final amountStr = amount.toStringAsFixed(2);
     final isPayer = expense.paidById == currentUserId;
 
     if (isPayer) {
-      return "You get: $amountStr€";
+      final amountToGetBack = expense.amount - shareAmount;
+      if (amountToGetBack == 0.0) return '';
+      return "You get: ${amountToGetBack.toStringAsFixed(2)}€";
     } else {
-      return "You owe: $amountStr€";
+      if (shareAmount == 0.0) return '';
+      return "You owe: ${shareAmount.toStringAsFixed(2)}€";
     }
   }
 

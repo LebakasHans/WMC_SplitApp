@@ -115,7 +115,6 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
             onRefresh: () async => _loadData(),
             child: CustomScrollView(
               slivers: [
-                // Group Header
                 SliverToBoxAdapter(
                   child: ValueListenableBuilder<SimpleGroup>(
                     valueListenable: _groupNotifier,
@@ -125,7 +124,7 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                           decoration: BoxDecoration(
                             color: Theme.of(
                               context,
-                            ).colorScheme.primary.withOpacity(0.1),
+                            ).colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(24),
                               bottomRight: Radius.circular(24),
@@ -137,7 +136,7 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                                 radius: 36,
                                 backgroundColor: Theme.of(
                                   context,
-                                ).colorScheme.primary.withOpacity(0.2),
+                                ).colorScheme.primary.withValues(alpha: 0.2),
                                 child: Icon(
                                   Icons.group,
                                   size: 40,
@@ -164,7 +163,6 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                   ),
                 ),
 
-                // Debts Section
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
@@ -181,8 +179,6 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                     ),
                   ),
                 ),
-
-                // Debts List
                 SliverToBoxAdapter(
                   child:
                       debts.isEmpty
@@ -210,7 +206,6 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                           ),
                 ),
 
-                // Expenses Section Header
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
@@ -227,10 +222,8 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                     ),
                   ),
                 ),
-
-                // Expenses List
                 expenses.isEmpty
-                    ? SliverFillRemaining(
+                    ? SliverToBoxAdapter(
                       child: EmptyStateWidget(
                         icon: Icons.receipt,
                         title: 'No Expenses Yet',
@@ -249,13 +242,25 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
                         ),
                       ),
                     )
-                    : SliverFillRemaining(
-                      child: ExpensesListWidget(
-                        expenses: expenses,
-                        currentUserId: currentUserId,
-                        onRefresh: () async => _loadData(),
+                    : SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: LimitedBox(
+                          maxHeight: MediaQuery.of(context).size.height * 0.6,
+                          child: ExpensesListWidget(
+                            expenses: expenses,
+                            currentUserId: currentUserId,
+                            onRefresh: () async => _loadData(),
+                          ),
+                        ),
                       ),
                     ),
+                // Add a final padding space at bottom to ensure proper scrolling
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 80,
+                  ), // Space for FAB and additional padding
+                ),
               ],
             ),
           );
