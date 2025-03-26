@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:split_app/pages/login_page.dart';
+import 'package:split_app/providers/theme_provider.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -54,85 +56,95 @@ class _AccountPageState extends State<AccountPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = themeProvider.themeModeToString(
+      themeProvider.themeMode,
+    );
+
     return Scaffold(
       appBar: AppBar(title: const Text('Account')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // User profile section
-            Container(
-              padding: const EdgeInsets.all(16),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.deepPurple,
-                    child: Icon(Icons.person, size: 60, color: Colors.white),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _username,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  // User profile section
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.deepPurple,
+                          child: Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _username,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+
+                  ListTile(
+                    leading: const Icon(Icons.color_lens),
+                    title: const Text('Theme'),
+                    trailing: DropdownButton<String>(
+                      value: currentThemeMode,
+                      underline: Container(), // Remove default underline
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          themeProvider.setThemeMode(newValue);
+                        }
+                      },
+                      items:
+                          <String>[
+                            'light',
+                            'dark',
+                            'system',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            String displayText =
+                                value[0].toUpperCase() + value.substring(1);
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(displayText),
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                  const Divider(),
                 ],
               ),
             ),
+          ),
 
-            // Settings/preferences (placeholders)
-            const ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
-              trailing: Icon(Icons.chevron_right),
-            ),
-            const Divider(),
-
-            const ListTile(
-              leading: Icon(Icons.language),
-              title: Text('Language'),
-              trailing: Icon(Icons.chevron_right),
-            ),
-            const Divider(),
-
-            const ListTile(
-              leading: Icon(Icons.color_lens),
-              title: Text('Theme'),
-              trailing: Icon(Icons.chevron_right),
-            ),
-            const Divider(),
-
-            const ListTile(
-              leading: Icon(Icons.help),
-              title: Text('Help & Support'),
-              trailing: Icon(Icons.chevron_right),
-            ),
-            const Divider(),
-
-            const SizedBox(height: 24),
-
-            // Logout button at the bottom
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _logout,
-                  icon: const Icon(Icons.logout),
-                  label: const Text('Logout'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _logout,
+                icon: const Icon(Icons.logout),
+                label: const Text('Logout'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
