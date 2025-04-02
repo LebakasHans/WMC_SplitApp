@@ -35,18 +35,16 @@ class _AccountPageState extends State<AccountPage> {
       _isLoading = true;
     });
 
-    // Clear stored credentials
     await _secureStorage.delete(key: 'username');
     await _secureStorage.delete(key: 'password');
     await _secureStorage.delete(key: 'userId');
 
     if (!mounted) return;
 
-    // Navigate to login page
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const LoginPage()),
-      (route) => false, // Remove all previous routes
+      (route) => false,
     );
   }
 

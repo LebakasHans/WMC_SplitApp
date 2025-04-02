@@ -39,7 +39,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
     _membersFuture = _expensesRepository.getGroupMembers(widget.groupId);
     _membersFuture.then((members) {
       if (members.isNotEmpty) {
-        // Initialize with equal shares
         final equalShare = 1.0 / members.length;
         setState(() {
           for (var member in members) {
@@ -60,7 +59,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
   }
 
   Future<void> _saveExpense() async {
-    // Validate inputs
     if (_descriptionController.text.isEmpty ||
         _amountController.text.isEmpty ||
         _paidById == null) {
@@ -78,7 +76,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
       return;
     }
 
-    // Check if shares sum up to approximately 1.0 (allowing for floating point errors)
     final totalShare = _participantShares.values.fold(
       0.0,
       (sum, share) => sum + share,
@@ -95,7 +92,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
     });
 
     try {
-      // Create participant shares list
       final participantSharesList =
           _participantShares.entries
               .map(
@@ -106,7 +102,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
               )
               .toList();
 
-      // Create expense DTO
       final expenseDto = ExpenseDto(
         description: _descriptionController.text,
         amount: amount,
@@ -114,7 +109,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
         participantShares: participantSharesList,
       );
 
-      // Submit expense
       final success = await _expensesRepository.addExpense(
         widget.groupId,
         expenseDto,
@@ -123,7 +117,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
       if (!mounted) return;
 
       if (success) {
-        // Return true to indicate successful addition
         Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(

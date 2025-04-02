@@ -33,7 +33,6 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Utility method to convert ThemeMode to string
   String themeModeToString(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
